@@ -24,7 +24,8 @@
       <el-col v-for="(book, index) in tableData" :key="index" :span="6">
         <div class="item-book">
           <div style="display: flex;justify-content: center;padding: 6px;">
-            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="book.cover" alt="" />
+            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="book.cover" alt=""
+              @click="toDetail(book.id)" />
           </div>
           <div style="padding: 4px 6px;">
             <div style="color: rgb(51,51,51);font-size: 22px;font-weight: bold;margin-block: 4px;">
