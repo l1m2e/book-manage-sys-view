@@ -1,182 +1,105 @@
-<template
-  ><el-row style="margin-top: 20px;">
-    <!-- 条件搜索 -->
-    <div class="word-search">
-      <div class="item">
-        <input type="text" placeholder="搜索新闻" v-model="bookQueryDto.name" />
-        <i class="el-icon-search" @click="fetchFreshData"></i>
-      </div>
+<template><el-row style="margin-top: 20px;">
+  <!-- 条件搜索 -->
+  <div class="word-search">
+    <div class="item">
+      <input type="text" placeholder="搜索新闻" v-model="bookQueryDto.name" />
+      <i class="el-icon-search" @click="fetchFreshData"></i>
     </div>
-    <div style="width: 1200px;margin: 0 auto;padding-block: 40px;">
-      <span
-        class="category"
-        :style="{
-          fontWeight: categoryItemSelected === categoryItem ? '800' : '',
-          color: categoryItemSelected === categoryItem ? 'rgb(51,51,51)' : '',
-          backgroundColor:
-            categoryItemSelected === categoryItem ? 'rgb(247, 247, 247)' : ''
-        }"
-        @click="categoryChoose(categoryItem)"
-        v-for="(categoryItem, index) in options"
-        :key="index"
-      >
-        {{ categoryItem.name }}
-      </span>
-    </div>
-    <el-row style="margin: 10px 0;box-sizing: border-box;">
-      <el-row v-if="tableData.length === 0">
-        <el-empty description="暂无新闻"></el-empty>
-      </el-row>
-      <el-row v-else style="width: 1200px;margin: 0 auto;">
-        <el-col v-for="(book, index) in tableData" :key="index" :span="6">
-          <div class="item-book">
-            <div style="display: flex;justify-content: center;padding: 6px;">
-              <img
-                style="width: 100%;height: 360px;border-radius: 5px;"
-                :src="book.cover"
-                alt=""
-              />
+  </div>
+  <div style="width: 1200px;margin: 0 auto;padding-block: 40px;">
+    <span class="category" :style="{
+        fontWeight: categoryItemSelected === categoryItem ? '800' : '',
+        color: categoryItemSelected === categoryItem ? 'rgb(51,51,51)' : '',
+        backgroundColor:
+          categoryItemSelected === categoryItem ? 'rgb(247, 247, 247)' : ''
+      }" @click="categoryChoose(categoryItem)" v-for="(categoryItem, index) in options" :key="index">
+      {{ categoryItem.name }}
+    </span>
+  </div>
+  <el-row style="margin: 10px 0;box-sizing: border-box;">
+    <el-row v-if="tableData.length === 0">
+      <el-empty description="暂无新闻"></el-empty>
+    </el-row>
+    <el-row v-else style="width: 1200px;margin: 0 auto;">
+      <el-col v-for="(book, index) in tableData" :key="index" :span="6">
+        <div class="item-book">
+          <div style="display: flex;justify-content: center;padding: 6px;">
+            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="book.cover" alt="" />
+          </div>
+          <div style="padding: 4px 6px;">
+            <div style="color: rgb(51,51,51);font-size: 22px;font-weight: bold;margin-block: 4px;">
+              <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
+                <div class="title" @click="toDetail(book.id)">
+                  {{ book.name }}</div>
+              </el-tooltip>
             </div>
-            <div style="padding: 4px 6px;">
-              <div
-                style="color: rgb(51,51,51);font-size: 22px;font-weight: bold;margin-block: 4px;"
-              >
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  :content="book.name"
-                  placement="bottom-end"
-                >
-                  <div class="title">{{ book.name }}</div>
+            <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);">
+              <div class="title" style="margin-block: 8px;">
+                <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
+                <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark" content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
+                  placement="bottom-end">
+                  <span style="text-decoration: underline;text-decoration-style: dashed;">预售新闻</span>
+                </el-tooltip>
+                <span v-else>新闻已上架</span>
+                <span> - {{ book.categoryName }}</span>
+              </div>
+              <div style="font-size: 12px;">
+                <el-tooltip class="item" effect="dark" :content="book.publisher" placement="bottom-end">
+                  <div class="title">由【{{ book.publisher }}】出版</div>
                 </el-tooltip>
               </div>
-              <div
-                style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);"
-              >
-                <div class="title" style="margin-block: 8px;">
-                  <i
-                    v-if="book.isPlanBuy"
-                    style="margin-right: 5px;"
-                    class="el-icon-warning"
-                  ></i>
-                  <i
-                    v-else
-                    style="margin-right: 5px;color: rgb(253, 199, 50);"
-                    class="el-icon-success"
-                  ></i>
-                  <el-tooltip
-                    v-if="book.isPlanBuy"
-                    class="item"
-                    effect="dark"
-                    content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
-                    placement="bottom-end"
-                  >
-                    <span
-                      style="text-decoration: underline;text-decoration-style: dashed;"
-                      >预售新闻</span
-                    >
-                  </el-tooltip>
-                  <span v-else>新闻已上架</span>
-                  <span> - {{ book.categoryName }}</span>
-                </div>
-                <div style="font-size: 12px;">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="book.publisher"
-                    placement="bottom-end"
-                  >
-                    <div class="title">由【{{ book.publisher }}】出版</div>
-                  </el-tooltip>
-                </div>
-                <div>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="book.author"
-                    placement="bottom-end"
-                  >
-                    <div class="title" style="margin-block: 10px;">
-                      <span style="margin-right: 5px;"
-                        >作者：{{ book.author }}</span
-                      >
-                      <!-- <span>库存{{ book.num }}本</span> -->
-                    </div>
-                  </el-tooltip>
-                </div>
-                <div>
-                  <span v-if="!book.isPlanBuy">
-                    <span style="color: blue;" v-if="book.isSave"
-                      >已收藏该新闻</span
-                    >
-                    <span
-                      v-else
-                      class="edit-round"
-                      style="margin-right: 5px;"
-                      @click="saveBook(book)"
-                    >
-                      <i class="el-icon-star-off"></i>
-                      收藏
-                    </span>
-                    <span style="margin-left: 5px;">
-                      <!-- 库存不足 -->
-                      <span v-if="book.num === 0">库存不足</span>
+              <div>
+                <el-tooltip class="item" effect="dark" :content="book.author" placement="bottom-end">
+                  <div class="title" style="margin-block: 10px;">
+                    <span style="margin-right: 5px;">作者：{{ book.author }}</span>
+                    <!-- <span>库存{{ book.num }}本</span> -->
+                  </div>
+                </el-tooltip>
+              </div>
+              <div>
+                <span v-if="!book.isPlanBuy">
+                  <span style="color: blue;" v-if="book.isSave">已收藏该新闻</span>
+                  <span v-else class="edit-round" style="margin-right: 5px;" @click="saveBook(book)">
+                    <i class="el-icon-star-off"></i>
+                    收藏
+                  </span>
+                  <span style="margin-left: 5px;">
+                    <!-- 库存不足 -->
+                    <span v-if="book.num === 0">库存不足</span>
+                    <span v-else>
+                      <!-- 没借过书的情况 -->
+                      <span v-if="book.isReturn === null">
+                        <span style="margin-left: 4px;" class="edit-round" @click="handleEdit(book)">借书</span>
+                      </span>
                       <span v-else>
-                        <!-- 没借过书的情况 -->
-                        <span v-if="book.isReturn === null">
-                          <span
-                            style="margin-left: 4px;"
-                            class="edit-round"
-                            @click="handleEdit(book)"
-                            >借书</span
-                          >
-                        </span>
-                        <span v-else>
-                          <!-- 待归还状态，只做显示 -->
-                          <span v-if="!book.isReturn" style="color: blue;"
-                            >待归还</span
-                          >
-                          <span
-                            v-else
-                            style="margin-left: 4px;"
-                            class="edit-round"
-                            @click="handleEdit(book)"
-                            >借书</span
-                          >
-                        </span>
+                        <!-- 待归还状态，只做显示 -->
+                        <span v-if="!book.isReturn" style="color: blue;">待归还</span>
+                        <span v-else style="margin-left: 4px;" class="edit-round" @click="handleEdit(book)">借书</span>
                       </span>
                     </span>
                   </span>
-                  <span v-else>
-                    <span style="color: blue;" v-if="book.isRss"
-                      >已订阅该新闻</span
-                    >
-                    <span v-else class="edit-round" @click="rssBook(book)"
-                      >订阅</span
-                    >
-                  </span>
-                </div>
+                </span>
+                <span v-else>
+                  <span style="color: blue;" v-if="book.isRss">已订阅该新闻</span>
+                  <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
+                </span>
               </div>
             </div>
           </div>
-        </el-col>
-      </el-row>
+        </div>
+      </el-col>
     </el-row>
-    <div class="pager">
-      <div>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="current"
-          :page-size="size"
-          layout="total, prev, pager, next"
-          :total="totalCount"
-        >
-        </el-pagination>
-      </div>
+  </el-row>
+  <div class="pager">
+    <div>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="current"
+        :page-size="size" layout="total, prev, pager, next" :total="totalCount">
+      </el-pagination>
     </div>
-    <el-dialog :show-close="false" :visible.sync="dialogOperation" width="18%">
-      <!-- <div style="padding:20px 20px 20px 15px;">
+  </div>
+  <el-dialog :show-close="false" :visible.sync="dialogOperation" width="18%">
+    <!-- <div style="padding:20px 20px 20px 15px;">
                 <div style="margin-bottom: 10px;">
                     <div class="point">借书数量</div>
                     <el-input-number style="width: 100%;" size="small" v-model="deadlineNum" :min="1" :max="10"
@@ -189,17 +112,16 @@
                     </el-date-picker>
                 </div>
             </div> -->
-      <span slot="footer" class="dialog-footer">
-        <span class="channel-button" @click="dialogOperation = false">
-          取消操作
-        </span>
-        <span class="edit-button" @click="addOperation()">
-          确定借阅
-        </span>
+    <span slot="footer" class="dialog-footer">
+      <span class="channel-button" @click="dialogOperation = false">
+        取消操作
       </span>
-    </el-dialog>
-  </el-row></template
->
+      <span class="edit-button" @click="addOperation()">
+        确定借阅
+      </span>
+    </span>
+  </el-dialog>
+</el-row></template>
 
 <script>
 export default {
@@ -229,6 +151,12 @@ export default {
     this.fetchBookshelf();
   },
   methods: {
+    // 跳转到详情
+    toDetail(bookId) {
+      this.$router.push({
+        path: `/NewsDetail/${bookId}`,
+      });
+    },
     categoryChoose(category) {
       this.categoryItemSelected = category;
       this.bookQueryDto.categoryId = category.id;
@@ -420,8 +348,10 @@ export default {
   text-overflow: ellipsis;
   /* 使用省略号表示超出部分 */
   white-space: nowrap;
-  /* 禁止换行 */
+  /* 鼠标移上会出现下划线 */
+  cursor: pointer;
 }
+
 
 .pager {
   display: flex;

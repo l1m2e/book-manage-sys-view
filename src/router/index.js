@@ -120,6 +120,14 @@ const routes = [
         meta: { requireAuth: true }
       },
       {
+        name: "新闻详情",
+        path: "/NewsDetail/:id",
+        show: false,
+        icon: "el-icon-document-remove",
+        component: () => import(`@/views/user/NewsDetail.vue`),
+        meta: { requireAuth: true }
+      },
+      {
         name: "历史",
         path: "/bookOrderHistory",
         show: true,
