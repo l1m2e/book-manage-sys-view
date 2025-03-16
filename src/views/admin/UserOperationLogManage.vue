@@ -1,68 +1,31 @@
-<template>
-  <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-    <el-row style="padding: 10px;margin: 0 10px;">
-      <el-row>
-        <el-date-picker
-          size="small"
-          style="width: 220px;"
-          @change="fetchFreshData"
-          v-model="searchTime"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="起始时间"
-          end-placeholder="结束时间"
-        >
-        </el-date-picker>
-        <el-input
-          size="small"
-          style="width: 166px;margin-left: 5px;"
-          v-model="userOperationLogQueryDto.userId"
-          placeholder="用户ID"
-          clearable
-          @clear="handleFilterClear"
-        >
-          <el-button
-            slot="append"
-            @click="handleFilter"
-            icon="el-icon-search"
-          ></el-button>
-        </el-input>
-      </el-row>
-    </el-row>
-    <el-row style="margin: 10px 20px;">
-      <el-table :data="tableData">
-        <el-table-column prop="content" label="行为"></el-table-column>
-        <el-table-column
-          prop="userName"
-          width="148"
-          label="操作者"
-        ></el-table-column>
-        <el-table-column
-          prop="createTime"
-          width="168"
-          label="发生时间"
-        ></el-table-column>
-        <el-table-column label="操作" fixed="right" width="90">
-          <template slot-scope="scope">
-            <span class="text-button" @click="handleDelete(scope.row)"
-              >删除</span
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        style="margin: 20px 0;float: right;"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[20, 50]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalItems"
-      ></el-pagination>
+<template><el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
+  <el-row style="padding: 10px;margin: 0 10px;">
+    <el-row>
+      <el-date-picker size="small" style="width: 220px;" @change="fetchFreshData" v-model="searchTime" type="daterange"
+        range-separator="至" start-placeholder="起始时间" end-placeholder="结束时间">
+      </el-date-picker>
+      <el-input size="small" style="width: 166px;margin-left: 5px;" v-model="userOperationLogQueryDto.userId"
+        placeholder="用户ID" clearable @clear="handleFilterClear">
+        <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
+      </el-input>
     </el-row>
   </el-row>
-</template>
+  <el-row style="margin: 10px 20px;">
+    <el-table :data="tableData">
+      <el-table-column prop="content" label="行为"></el-table-column>
+      <el-table-column prop="userName" width="148" label="操作者"></el-table-column>
+      <el-table-column prop="createTime" width="168" label="发生时间"></el-table-column>
+      <el-table-column label="操作" fixed="right" width="90">
+        <template slot-scope="scope">
+          <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 50]" :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="totalItems"></el-pagination>
+  </el-row>
+</el-row></template>
 
 <script>
 export default {
@@ -77,7 +40,7 @@ export default {
       selectedRows: [],
       userOperationLogQueryDto: {}, // 搜索条件
       options: [],
-      bookshelfOptions: [],
+      newsShelfOptions: [],
       searchTime: []
     };
   },

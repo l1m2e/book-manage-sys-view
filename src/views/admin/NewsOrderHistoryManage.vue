@@ -1,75 +1,38 @@
-<template>
-  <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-    <el-row style="padding: 10px;margin: 0 10px;">
-      <el-row>
-        <span class="top-bar">订阅时间</span>
-        <el-date-picker
-          size="small"
-          style="width: 220px;"
-          v-model="searchTime"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="起始时间"
-          end-placeholder="结束时间"
-        >
-        </el-date-picker>
-        <el-button
-          size="small"
-          class="customer"
-          style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;"
-          type="primary"
-          @click="handleFilter"
-          >立即查询</el-button
-        >
-      </el-row>
-    </el-row>
-    <el-row style="margin: 10px 20px;">
-      <el-table :data="tableData">
-        <el-table-column prop="bookName" label="图书"></el-table-column>
-        <el-table-column prop="num" width="68" label="馆藏数"></el-table-column>
-        <el-table-column
-          prop="author"
-          width="118"
-          label="作者"
-        ></el-table-column>
-        <el-table-column prop="floor" width="148" label="馆藏区">
-          <template slot-scope="scope">
-            <span>{{
-              scope.row.floor + "-" + scope.row.area + "-" + scope.row.frame
-            }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="userName"
-          width="148"
-          label="订阅者"
-        ></el-table-column>
-        <el-table-column
-          prop="createTime"
-          width="168"
-          label="订阅时间"
-        ></el-table-column>
-        <el-table-column label="操作" fixed="right" width="90">
-          <template slot-scope="scope">
-            <span class="text-button" @click="handleDelete(scope.row)"
-              >删除</span
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        style="margin: 20px 0;float: right;"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[5, 7]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalItems"
-      ></el-pagination>
+<template><el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
+  <el-row style="padding: 10px;margin: 0 10px;">
+    <el-row>
+      <span class="top-bar">借阅时间</span>
+      <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange" range-separator="至"
+        start-placeholder="起始时间" end-placeholder="结束时间">
+      </el-date-picker>
+      <el-button size="small" class="customer"
+        style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;"
+        type="primary" @click="handleFilter">立即查询</el-button>
     </el-row>
   </el-row>
-</template>
+  <el-row style="margin: 10px 20px;">
+    <el-table :data="tableData">
+      <el-table-column prop="newsName" label="书籍名"></el-table-column>
+      <el-table-column prop="userName" width="98" label="订阅者"></el-table-column>
+      <el-table-column prop="deadlineNum" width="88" label="馆藏数"></el-table-column>
+      <el-table-column prop="isReturn" width="130" label="是否归还">
+        <template slot-scope="scope">
+          <span>{{ scope.row.isReturn ? "已归还" : "未归还" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="returnTime" width="168" label="归还时间"></el-table-column>
+      <el-table-column prop="createTime" width="168" label="借阅时间"></el-table-column>
+      <el-table-column label="操作" fixed="right" width="90">
+        <template slot-scope="scope">
+          <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 7]" :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="totalItems"></el-pagination>
+  </el-row>
+</el-row></template>
 
 <script>
 export default {
@@ -82,9 +45,9 @@ export default {
       totalItems: 0,
       tableData: [],
       selectedRows: [],
-      bookRssHistoryQueryDto: {}, // 搜索条件
+      newsOrderHistoryQueryDto: {}, // 搜索条件
       options: [],
-      bookshelfOptions: [],
+      newsShelfOptions: [],
       searchTime: []
     };
   },
@@ -103,7 +66,7 @@ export default {
         return;
       }
       const confirmed = await this.$swalConfirm({
-        title: "删除图书订阅数据",
+        title: "删除借阅记录数据",
         text: `删除后不可恢复，是否继续？`,
         icon: "warning"
       });
@@ -111,7 +74,7 @@ export default {
         try {
           let ids = this.selectedRows.map(entity => entity.id);
           const response = await this.$axios.post(
-            `bookRssHistory/batchDelete`,
+            `newsOrderHistory/batchDelete`,
             ids
           );
           if (response.data.code === 200) {
@@ -139,7 +102,7 @@ export default {
     },
     resetQueryCondition() {
       this.searchTime = [];
-      this.bookRssHistoryQueryDto = {};
+      this.newsOrderHistoryQueryDto = {};
       this.fetchFreshData();
     },
     closeDialog() {
@@ -167,14 +130,17 @@ export default {
           size: this.pageSize,
           startTime: startTime,
           endTime: endTime,
-          ...this.bookRssHistoryQueryDto
+          ...this.newsOrderHistoryQueryDto
         };
-        const response = await this.$axios.post("bookRssHistory/query", params);
+        const response = await this.$axios.post(
+          "newsOrderHistory/query",
+          params
+        );
         const { data } = response;
         this.tableData = data.data;
         this.totalItems = data.total;
       } catch (error) {
-        console.error("查询图书订阅信息异常:", error);
+        console.error("查询借阅记录信息异常:", error);
       }
     },
     add() {

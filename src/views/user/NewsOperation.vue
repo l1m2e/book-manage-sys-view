@@ -2,7 +2,7 @@
   <!-- 条件搜索 -->
   <div class="word-search">
     <div class="item">
-      <input type="text" placeholder="搜索新闻" v-model="bookQueryDto.name" />
+      <input type="text" placeholder="搜索新闻" v-model="newsQueryDto.name" />
       <i class="el-icon-search" @click="fetchFreshData"></i>
     </div>
   </div>
@@ -21,69 +21,69 @@
       <el-empty description="暂无新闻"></el-empty>
     </el-row>
     <el-row v-else style="width: 1200px;margin: 0 auto;">
-      <el-col v-for="(book, index) in tableData" :key="index" :span="6">
-        <div class="item-book">
+      <el-col v-for="(news, index) in tableData" :key="index" :span="6">
+        <div class="item-news">
           <div style="display: flex;justify-content: center;padding: 6px;">
-            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="book.cover" alt=""
-              @click="toDetail(book.id)" />
+            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="news.cover" alt=""
+              @click="toDetail(news.id)" />
           </div>
           <div style="padding: 4px 6px;">
             <div style="color: rgb(51,51,51);font-size: 22px;font-weight: bold;margin-block: 4px;">
-              <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
-                <div class="title" @click="toDetail(book.id)">
-                  {{ book.name }}</div>
+              <el-tooltip class="item" effect="dark" :content="news.name" placement="bottom-end">
+                <div class="title" @click="toDetail(news.id)">
+                  {{ news.name }}</div>
               </el-tooltip>
             </div>
             <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);">
               <div class="title" style="margin-block: 8px;">
-                <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
+                <i v-if="news.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
                 <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
-                <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark" content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
+                <el-tooltip v-if="news.isPlanBuy" class="item" effect="dark" content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
                   placement="bottom-end">
                   <span style="text-decoration: underline;text-decoration-style: dashed;">预售新闻</span>
                 </el-tooltip>
                 <span v-else>新闻已上架</span>
-                <span> - {{ book.categoryName }}</span>
+                <span> - {{ news.categoryName }}</span>
               </div>
               <div style="font-size: 12px;">
-                <el-tooltip class="item" effect="dark" :content="book.publisher" placement="bottom-end">
-                  <div class="title">由【{{ book.publisher }}】出版</div>
+                <el-tooltip class="item" effect="dark" :content="news.publisher" placement="bottom-end">
+                  <div class="title">由【{{ news.publisher }}】出版</div>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" :content="book.author" placement="bottom-end">
+                <el-tooltip class="item" effect="dark" :content="news.author" placement="bottom-end">
                   <div class="title" style="margin-block: 10px;">
-                    <span style="margin-right: 5px;">作者：{{ book.author }}</span>
-                    <!-- <span>库存{{ book.num }}本</span> -->
+                    <span style="margin-right: 5px;">作者：{{ news.author }}</span>
+                    <!-- <span>库存{{ news.num }}本</span> -->
                   </div>
                 </el-tooltip>
               </div>
               <div>
-                <span v-if="!book.isPlanBuy">
-                  <span style="color: blue;" v-if="book.isSave">已收藏该新闻</span>
-                  <span v-else class="edit-round" style="margin-right: 5px;" @click="saveBook(book)">
+                <span v-if="!news.isPlanBuy">
+                  <span style="color: blue;" v-if="news.isSave">已收藏该新闻</span>
+                  <span v-else class="edit-round" style="margin-right: 5px;" @click="saveNews(news)">
                     <i class="el-icon-star-off"></i>
                     收藏
                   </span>
                   <span style="margin-left: 5px;">
                     <!-- 库存不足 -->
-                    <span v-if="book.num === 0">库存不足</span>
+                    <span v-if="news.num === 0">库存不足</span>
                     <span v-else>
                       <!-- 没借过书的情况 -->
-                      <span v-if="book.isReturn === null">
-                        <span style="margin-left: 4px;" class="edit-round" @click="handleEdit(book)">借书</span>
+                      <span v-if="news.isReturn === null">
+                        <span style="margin-left: 4px;" class="edit-round" @click="handleEdit(news)">借书</span>
                       </span>
                       <span v-else>
                         <!-- 待归还状态，只做显示 -->
-                        <span v-if="!book.isReturn" style="color: blue;">待归还</span>
-                        <span v-else style="margin-left: 4px;" class="edit-round" @click="handleEdit(book)">借书</span>
+                        <span v-if="!news.isReturn" style="color: blue;">待归还</span>
+                        <span v-else style="margin-left: 4px;" class="edit-round" @click="handleEdit(news)">借书</span>
                       </span>
                     </span>
                   </span>
                 </span>
                 <span v-else>
-                  <span style="color: blue;" v-if="book.isRss">已订阅该新闻</span>
-                  <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
+                  <span style="color: blue;" v-if="news.isRss">已订阅该新闻</span>
+                  <span v-else class="edit-round" @click="rssNews(news)">订阅</span>
                 </span>
               </div>
             </div>
@@ -138,33 +138,33 @@ export default {
       isOperation: false, // 开关-标识新增或修改
       tableData: [],
       selectedRows: [],
-      bookQueryDto: {}, // 搜索条件
+      newsQueryDto: {}, // 搜索条件
       options: [],
-      bookshelfOptions: [],
+      newsShelfOptions: [],
       categoryItemSelected: null,
       categoryList: [],
-      bookOrderHistorys: []
+      newsOrderHistorys: []
     };
   },
   created() {
     this.fetchFreshData();
     this.fetchCategory();
-    this.fetchBookshelf();
+    this.fetchNewsshelf();
   },
   methods: {
     // 跳转到详情
-    toDetail(bookId) {
+    toDetail(newsId) {
       this.$router.push({
-        path: `/NewsDetail/${bookId}`,
+        path: `/NewsDetail/${newsId}`,
       });
     },
     categoryChoose(category) {
       this.categoryItemSelected = category;
-      this.bookQueryDto.categoryId = category.id;
+      this.newsQueryDto.categoryId = category.id;
       this.fetchFreshData();
     },
     // 订阅新闻
-    async rssBook(book) {
+    async rssNews(news) {
       const confirmed = await this.$swalConfirm({
         title: "订阅此新闻？",
         text: `订阅后，上架时会接收通知`,
@@ -172,10 +172,10 @@ export default {
       });
       if (confirmed) {
         try {
-          const bookSave = { bookId: book.id };
+          const newsSave = { newsId: news.id };
           const response = await this.$axios.post(
-            `/bookRssHistory/save`,
-            bookSave
+            `/newsRssHistory/save`,
+            newsSave
           );
           this.$notify({
             title: "订阅操作",
@@ -190,7 +190,7 @@ export default {
       }
     },
     // 收藏新闻
-    async saveBook(book) {
+    async saveNews(news) {
       const confirmed = await this.$swalConfirm({
         title: "收藏此新闻？",
         text: `收藏后方便后续操作`,
@@ -198,8 +198,8 @@ export default {
       });
       if (confirmed) {
         try {
-          const bookSave = { bookId: book.id };
-          const response = await this.$axios.post(`/bookSave/save`, bookSave);
+          const newsSave = { newsId: news.id };
+          const response = await this.$axios.post(`/newsSave/save`, newsSave);
           this.$notify({
             title: "收藏操作",
             message:
@@ -212,13 +212,13 @@ export default {
         }
       }
     },
-    bookshelfConfig(item) {
+    newsShelfConfig(item) {
       return item.floor + "-" + item.area + "-" + item.frame;
     },
-    fetchBookshelf() {
-      this.$axios.post("bookshelf/query", {}).then(res => {
+    fetchNewsshelf() {
+      this.$axios.post("newsShelf/query", {}).then(res => {
         if (res.data.code === 200) {
-          this.bookshelfOptions = res.data.data;
+          this.newsShelfOptions = res.data.data;
         }
       });
     },
@@ -234,15 +234,15 @@ export default {
       });
     },
     resetQueryCondition() {
-      this.bookQueryDto = {};
+      this.newsQueryDto = {};
       this.fetchFreshData();
     },
 
     // 查询用户的预约记录
-    getBookOrderHistory() {
-      this.$axios.post("bookOrderHistory/queryUser", {}).then(res => {
+    getNewsOrderHistory() {
+      this.$axios.post("newsOrderHistory/queryUser", {}).then(res => {
         if (res.data.code === 200) {
-          this.bookOrderHistorys = res.data.data;
+          this.newsOrderHistorys = res.data.data;
         }
       });
     },
@@ -250,9 +250,9 @@ export default {
     // 信息新增
     async addOperation() {
       // try {
-      //     this.data.bookId = this.data.id;
+      //     this.data.newsId = this.data.id;
       //     this.data.deadlineNum = this.deadlineNum;
-      //     const response = await this.$axios.post('/bookOrderHistory/save', this.data);
+      //     const response = await this.$axios.post('/newsOrderHistory/save', this.data);
       //     if (response.data.code === 200) {
       //         this.fetchFreshData();
       //         this.data = {};
@@ -291,9 +291,9 @@ export default {
         const params = {
           current: this.currentPage,
           size: this.pageSize,
-          ...this.bookQueryDto
+          ...this.newsQueryDto
         };
-        const response = await this.$axios.post("/book/query", params);
+        const response = await this.$axios.post("/news/query", params);
         const { data } = response;
         this.tableData = data.data;
         this.totalCount = data.total;
@@ -335,7 +335,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.item-book {
+.item-news {
   border: 1px solid rgb(235, 235, 235);
   border-radius: 5px;
   margin: 5px;

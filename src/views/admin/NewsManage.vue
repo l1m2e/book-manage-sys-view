@@ -4,7 +4,7 @@
       <el-date-picker style="width: 216px;margin-right: 5px;" @change="fetchFreshData" size="small" v-model="searchTime"
         type="daterange" range-separator="至" start-placeholder="创建开始" end-placeholder="创建结束">
       </el-date-picker>
-      <el-input size="small" style="width: 166px;" v-model="bookQueryDto.name" placeholder="书名" clearable
+      <el-input size="small" style="width: 166px;" v-model="newsQueryDto.name" placeholder="书名" clearable
         @clear="handleFilterClear">
         <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
       </el-input>
@@ -15,45 +15,45 @@
   </el-row>
   <el-row style="margin: 10px 20px;">
     <el-row>
-      <el-col style="padding: 2px;border: 1px solid rgb(241,241,241);" v-for="(book, index) in tableData" :key="index"
+      <el-col style="padding: 2px;border: 1px solid rgb(241,241,241);" v-for="(news, index) in tableData" :key="index"
         :span="4">
-        <div class="item-book">
+        <div class="item-news">
           <div style="display: flex;justify-content: center;">
-            <img style="width: 150px;max-height: 180px;border-radius: 5px;" :src="book.cover" alt="" />
+            <img style="width: 150px;max-height: 180px;border-radius: 5px;" :src="news.cover" alt="" />
           </div>
           <div style="padding: 10px 14px;">
             <div style="color: rgb(51,51,51);font-size: 24px;font-weight: bold;margin-block: 4px;">
-              <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
-                <div class="title">{{ book.name }}</div>
+              <el-tooltip class="item" effect="dark" :content="news.name" placement="bottom-end">
+                <div class="title">{{ news.name }}</div>
               </el-tooltip>
             </div>
             <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);margin-block: 4px;">
               <div class="title" style="margin-block: 8px;">
-                <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
+                <i v-if="news.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
                 <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
-                <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark" content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
+                <el-tooltip v-if="news.isPlanBuy" class="item" effect="dark" content="计划上架的新闻，为预售新闻。用户可以订阅，新闻上架之后将做通知"
                   placement="bottom-end">
                   <span style="text-decoration: underline;text-decoration-style: dashed;">预售新闻</span>
                 </el-tooltip>
                 <span v-else>新闻已上架</span>
-                <span> - {{ book.categoryName }}</span>
+                <span> - {{ news.categoryName }}</span>
               </div>
               <div style="font-size: 12px;">
-                <el-tooltip class="item" effect="dark" :content="book.publisher" placement="bottom-end">
-                  <div class="title">由【{{ book.publisher }}】出版</div>
+                <el-tooltip class="item" effect="dark" :content="news.publisher" placement="bottom-end">
+                  <div class="title">由【{{ news.publisher }}】出版</div>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" :content="book.author" placement="bottom-end">
+                <el-tooltip class="item" effect="dark" :content="news.author" placement="bottom-end">
                   <div class="title" style="margin-block: 10px;">
-                    <span style="margin-right: 5px;">作者：{{ book.author }}</span>
-                    <span>【库存{{ book.num }}本】</span>
+                    <span style="margin-right: 5px;">作者：{{ news.author }}</span>
+                    <span>【库存{{ news.num }}本】</span>
                   </div>
                 </el-tooltip>
               </div>
               <div>
-                <span @click="handleEdit(book)" class="edit-round">修改</span>
-                <span @click="handleDelete(book)" style="margin-left: 4px;" class="edit-round">删除</span>
+                <span @click="handleEdit(news)" class="edit-round">修改</span>
+                <span @click="handleDelete(news)" style="margin-left: 4px;" class="edit-round">删除</span>
               </div>
             </div>
           </div>
@@ -72,8 +72,8 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <div class="point">新闻封面</div>
-          <el-upload class="avatar-uploader" action="/api/book-manage-sys-api/v1.0/file/upload" :show-file-list="false"
-            :on-success="handleBookCoverSuccess">
+          <el-upload class="avatar-uploader" action="/api/news-manage-sys-api/v1.0/file/upload" :show-file-list="false"
+            :on-success="handleNewsCoverSuccess">
             <img v-if="cover" :src="cover" class="dialog-cover" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -141,16 +141,16 @@ export default {
       isOperation: false, // 开关-标识新增或修改
       tableData: [],
       delectedRows: [],
-      bookQueryDto: {}, // 搜索条件
+      newsQueryDto: {}, // 搜索条件
       options: [],
-      bookshelfOptions: [],
+      newsShelfOptions: [],
       searchTime: []
     };
   },
   created() {
     this.fetchFreshData();
     this.fetchCategory();
-    this.fetchBookshelf();
+    this.fetchNewsshelf();
   },
   methods: {
     receiveData(html) {
@@ -162,10 +162,10 @@ export default {
       this.cover = "";
       this.data = {};
     },
-    bookshelfConfig(item) {
+    newsShelfConfig(item) {
       return item.floor + "-" + item.area + "-" + item.frame;
     },
-    handleBookCoverSuccess(res, file) {
+    handleNewsCoverSuccess(res, file) {
       if (res.code !== 200) {
         this.$message.error(`新闻封面上传异常`);
         return;
@@ -173,10 +173,10 @@ export default {
       this.$message.success(`新闻封面上传成功`);
       this.cover = res.data;
     },
-    fetchBookshelf() {
-      this.$axios.post("bookshelf/query", {}).then(res => {
+    fetchNewsshelf() {
+      this.$axios.post("newsShelf/query", {}).then(res => {
         if (res.data.code === 200) {
-          this.bookshelfOptions = res.data.data;
+          this.newsShelfOptions = res.data.data;
         }
       });
     },
@@ -205,7 +205,7 @@ export default {
       if (confirmed) {
         try {
           let ids = this.delectedRows.map(entity => entity.id);
-          const response = await this.$axios.post(`/book/batchDelete`, ids);
+          const response = await this.$axios.post(`/news/batchDelete`, ids);
           if (response.data.code === 200) {
             this.$swal.fire({
               title: "删除提示",
@@ -230,14 +230,14 @@ export default {
       }
     },
     resetQueryCondition() {
-      this.bookQueryDto = {};
+      this.newsQueryDto = {};
       this.fetchFreshData();
     },
     // 修改信息
     async updateOperation() {
       try {
         this.data.cover = this.cover;
-        const response = await this.$axios.put("/book/update", this.data);
+        const response = await this.$axios.put("/news/update", this.data);
         this.$swal.fire({
           title: "新闻信息修改",
           text: response.data.msg,
@@ -259,7 +259,7 @@ export default {
     async addOperation() {
       try {
         this.data.cover = this.cover;
-        const response = await this.$axios.post("/book/save", this.data);
+        const response = await this.$axios.post("/news/save", this.data);
         this.$message[response.data.code === 200 ? "success" : "error"](
           response.data.msg
         );
@@ -298,9 +298,9 @@ export default {
           size: this.pageSize,
           startTime: startTime,
           endTime: endTime,
-          ...this.bookQueryDto
+          ...this.newsQueryDto
         };
-        const response = await this.$axios.post("/book/query", params);
+        const response = await this.$axios.post("/news/query", params);
         const { data } = response;
         this.tableData = data.data;
         this.totalItems = data.total;
@@ -365,7 +365,7 @@ export default {
   padding: 6px;
 }
 
-.item-book {
+.item-news {
   background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;

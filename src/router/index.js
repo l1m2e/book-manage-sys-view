@@ -40,24 +40,24 @@ const routes = [
         meta: { requireAuth: true }
       },
       {
-        path: "/bookManage",
+        path: "/newsManage",
         name: "新闻管理",
         icon: "el-icon-tickets",
-        component: () => import(`@/views/admin/BookManage.vue`),
+        component: () => import(`@/views/admin/NewsManage.vue`),
         meta: { requireAuth: true }
       },
       {
-        path: "/bookOrderHistoryManage",
+        path: "/newsOrderHistoryManage",
         name: "借阅记录",
         icon: "el-icon-view",
-        component: () => import(`@/views/admin/BookOrderHistoryManage.vue`),
+        component: () => import(`@/views/admin/NewsOrderHistoryManage.vue`),
         meta: { requireAuth: true }
       },
       {
-        path: "/bookRssHistoryManage",
+        path: "/newsRssHistoryManage",
         name: "图书订阅",
         icon: "el-icon-s-marketing",
-        component: () => import(`@/views/admin/BookRssHistoryManage.vue`),
+        component: () => import(`@/views/admin/NewsRssHistoryManage.vue`),
         meta: { requireAuth: true }
       },
       {
@@ -95,7 +95,7 @@ const routes = [
         component: () => import(`@/views/admin/UserOperationLogManage.vue`),
         meta: { requireAuth: true }
       }
-      // { path: "/bookshelfManage", name: '书架管理', icon: 'el-icon-film', component: () => import(`@/views/admin/BookshelfManage.vue`), meta: { requireAuth: true } },
+      // { path: "/newsShelfManage", name: '书架管理', icon: 'el-icon-film', component: () => import(`@/views/admin/NewsshelfManage.vue`), meta: { requireAuth: true } },
     ]
   },
   {
@@ -113,10 +113,10 @@ const routes = [
       },
       {
         name: "新闻栏目",
-        path: "/bookOperation",
+        path: "/newsOperation",
         show: true,
         icon: "el-icon-tickets",
-        component: () => import(`@/views/user/BookOperation.vue`),
+        component: () => import(`@/views/user/NewsOperation.vue`),
         meta: { requireAuth: true }
       },
       {
@@ -129,26 +129,26 @@ const routes = [
       },
       {
         name: "历史",
-        path: "/bookOrderHistory",
+        path: "/newsOrderHistory",
         show: true,
         icon: "el-icon-pie-chart",
-        component: () => import(`@/views/user/BookOrderHistory.vue`),
+        component: () => import(`@/views/user/NewsOrderHistory.vue`),
         meta: { requireAuth: true }
       },
       {
         name: "收藏",
-        path: "/bookSave",
+        path: "/newsSave",
         show: true,
         icon: "el-icon-star-on",
-        component: () => import(`@/views/user/BookSave.vue`),
+        component: () => import(`@/views/user/NewsSave.vue`),
         meta: { requireAuth: true }
       },
       {
         name: "订阅",
-        path: "/bookRssHistory",
+        path: "/newsRssHistory",
         show: true,
         icon: "el-icon-bell",
-        component: () => import(`@/views/user/BookRssHistory.vue`),
+        component: () => import(`@/views/user/NewsRssHistory.vue`),
         meta: { requireAuth: true }
       },
       {

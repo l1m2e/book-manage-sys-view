@@ -1,60 +1,35 @@
 <template>
-  <div style="padding: 0 10px;overflow-y: hidden;overflow-x: hidden;">
-    <el-row>
-      <el-col :span="8">
-        <div style="padding: 10px;box-sizing: border-box;">
-          <PieChart
-            fontColor="#000"
-            bag="rgb(236, 245, 255)"
-            tag="基础数据"
-            :values="pieValues"
-            :types="pieTypes"
-          />
-        </div>
-        <div style="padding: 10px 20px;box-sizing: border-box;">
-          <h3>最新公告</h3>
-          <div
-            style="background-color: rgb(236, 245, 255);border-radius: 5px;padding: 5px 10px;"
-          >
-            <div
-              style="margin-bottom: 20px;margin-top: 5px;"
-              v-for="(notice, index) in noticeList"
-              :key="index"
-            >
-              <div style="margin: 5px 0;cursor: pointer;">
-                <span style="font-size: 14px;">{{ notice.name }}</span>
-              </div>
-              <div>
-                <span style="font-size: 14px;"
-                  >时间：{{ notice.createTime }}</span
-                >
-              </div>
+<div style="padding: 0 10px;overflow-y: hidden;overflow-x: hidden;">
+  <el-row>
+    <el-col :span="8">
+      <div style="padding: 10px;box-sizing: border-box;">
+        <PieChart fontColor="#000" bag="rgb(236, 245, 255)" tag="基础数据" :values="pieValues" :types="pieTypes" />
+      </div>
+      <div style="padding: 10px 20px;box-sizing: border-box;">
+        <h3>最新公告</h3>
+        <div style="background-color: rgb(236, 245, 255);border-radius: 5px;padding: 5px 10px;">
+          <div style="margin-bottom: 20px;margin-top: 5px;" v-for="(notice, index) in noticeList" :key="index">
+            <div style="margin: 5px 0;cursor: pointer;">
+              <span style="font-size: 14px;">{{ notice.name }}</span>
+            </div>
+            <div>
+              <span style="font-size: 14px;">时间：{{ notice.createTime }}</span>
             </div>
           </div>
         </div>
-      </el-col>
-      <el-col :span="16">
-        <div style="padding: 8px;box-sizing: border-box;">
-          <LineChart
-            height="310px"
-            tag="用户数"
-            @on-selected="userDatesSelected"
-            :values="userValues"
-            :date="userDates"
-          />
-        </div>
-        <div style="padding: 8px;box-sizing: border-box;">
-          <LineChart
-            height="310px"
-            tag="图书上架情况"
-            @on-selected="modelDatesSelected"
-            :values="modelValues"
-            :date="modelDates"
-          />
-        </div>
-      </el-col>
-    </el-row>
-  </div>
+      </div>
+    </el-col>
+    <el-col :span="16">
+      <div style="padding: 8px;box-sizing: border-box;">
+        <LineChart height="310px" tag="用户数" @on-selected="userDatesSelected" :values="userValues" :date="userDates" />
+      </div>
+      <div style="padding: 8px;box-sizing: border-box;">
+        <LineChart height="310px" tag="图书上架情况" @on-selected="modelDatesSelected" :values="modelValues"
+          :date="modelDates" />
+      </div>
+    </el-col>
+  </el-row>
+</div>
 </template>
 <script>
 import LineChart from "@/components/LineChart";
@@ -104,7 +79,7 @@ export default {
       });
     },
     modelDatesSelected(time) {
-      this.$axios.get(`/book/daysQuery/${time}`).then(response => {
+      this.$axios.get(`/news/daysQuery/${time}`).then(response => {
         const { data } = response;
         if (data.code === 200) {
           this.modelValues = data.data.map(entity => entity.count);

@@ -28,7 +28,7 @@ export default {
     },
     async getInfo() {
       const id = this.$route.params.id;
-      const { data } = await this.$axios.get(`/book/NewsDetail/${id}`, {
+      const { data } = await this.$axios.get(`/news/NewsDetail/${id}`, {
         headers: {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true' // 添加跳过ngrok警告的header

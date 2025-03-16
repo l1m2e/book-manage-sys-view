@@ -1,114 +1,68 @@
-<template>
-  <el-row style="margin-top: 20px;">
-    <!-- 条件搜索 -->
-    <div class="word-search">
-      <div class="item">
-        <input type="text" placeholder="书籍ID" v-model="bookQueryDto.bookId" />
-        <i class="el-icon-search" @click="fetchFreshData"></i>
-      </div>
+<template><el-row style="margin-top: 20px;">
+  <!-- 条件搜索 -->
+  <div class="word-search">
+    <div class="item">
+      <input type="text" placeholder="书籍ID" v-model="newsQueryDto.newsId" />
+      <i class="el-icon-search" @click="fetchFreshData"></i>
     </div>
-    <el-row style="margin: 10px 0;">
-      <el-row v-if="tableData.length === 0">
-        <el-empty description="暂无书籍借阅历史"></el-empty>
-      </el-row>
-      <el-row v-else>
-        <div style="margin: 0 auto;width: 1200px;">
-          <el-col v-for="(book, index) in tableData" :key="index" :span="6">
-            <div class="item-book">
-              <div style="display: flex;justify-content: center;">
-                <img
-                  style="width: 100%;max-height: 380px;border-radius: 5px;"
-                  :src="book.bookCover"
-                  alt=""
-                />
+  </div>
+  <el-row style="margin: 10px 0;">
+    <el-row v-if="tableData.length === 0">
+      <el-empty description="暂无书籍借阅历史"></el-empty>
+    </el-row>
+    <el-row v-else>
+      <div style="margin: 0 auto;width: 1200px;">
+        <el-col v-for="(news, index) in tableData" :key="index" :span="6">
+          <div class="item-news">
+            <div style="display: flex;justify-content: center;">
+              <img style="width: 100%;max-height: 380px;border-radius: 5px;" :src="news.newsCover" alt="" />
+            </div>
+            <div style="padding: 10px 22px;">
+              <div style="color: rgb(51,51,51);font-size: 24px;font-weight: bold;margin-block: 4px;">
+                <el-tooltip class="item" effect="dark" :content="news.newsName" placement="bottom-end">
+                  <div class="title">{{ news.newsName }}</div>
+                </el-tooltip>
               </div>
-              <div style="padding: 10px 22px;">
-                <div
-                  style="color: rgb(51,51,51);font-size: 24px;font-weight: bold;margin-block: 4px;"
-                >
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="book.bookName"
-                    placement="bottom-end"
-                  >
-                    <div class="title">{{ book.bookName }}</div>
-                  </el-tooltip>
-                </div>
-                <div class="title" style="margin-block: 8px;">
-                  <el-tooltip
-                    v-if="!book.isReturn"
-                    class="item"
-                    effect="dark"
-                    content="请及时归还"
-                    placement="bottom-end"
-                  >
-                    <span
-                      style="font-size: 14px;text-decoration: underline;text-decoration-style: dashed;"
-                      >待归还</span
-                    >
-                  </el-tooltip>
-                  <span v-else style="font-size: 14px;">已归还</span>
-                </div>
-                <div
-                  style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);margin-block: 4px;"
-                >
-                  <div style="font-size: 12px;margin-top: 6px;">
-                    <div class="title">借阅【{{ book.deadlineNum }}】本</div>
-                  </div>
-                  <div>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="book.createTime"
-                      placement="bottom-end"
-                    >
-                      <div class="title" style="margin-block: 10px;">
-                        <span style="margin-right: 5px;"
-                          >借阅时间：{{ book.createTime }}</span
-                        >
-                      </div>
-                    </el-tooltip>
-
-                    <div class="title" style="margin-block: 10px;">
-                      <span style="margin-right: 5px;"
-                        >归还时间：{{ book.returnTime }}</span
-                      >
-                    </div>
-                  </div>
+              <div class="title" style="margin-block: 8px;">
+                <el-tooltip v-if="!news.isReturn" class="item" effect="dark" content="请及时归还" placement="bottom-end">
+                  <span style="font-size: 14px;text-decoration: underline;text-decoration-style: dashed;">待归还</span>
+                </el-tooltip>
+                <span v-else style="font-size: 14px;">已归还</span>
+              </div>
+              <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);margin-block: 4px;">
+                <div style="font-size: 12px;margin-top: 6px;">
+                  <div class="title">借阅【{{ news.deadlineNum }}】本</div>
                 </div>
                 <div>
-                  <span
-                    class="edit-round"
-                    v-if="book.isReturn === false"
-                    @click="handleReturn(book)"
-                    >还书</span
-                  >
-                  <span class="edit-round" v-else @click="handleDelete(book)"
-                    >删除</span
-                  >
+                  <el-tooltip class="item" effect="dark" :content="news.createTime" placement="bottom-end">
+                    <div class="title" style="margin-block: 10px;">
+                      <span style="margin-right: 5px;">借阅时间：{{ news.createTime }}</span>
+                    </div>
+                  </el-tooltip>
+
+                  <div class="title" style="margin-block: 10px;">
+                    <span style="margin-right: 5px;">归还时间：{{ news.returnTime }}</span>
+                  </div>
                 </div>
               </div>
+              <div>
+                <span class="edit-round" v-if="news.isReturn === false" @click="handleReturn(news)">还书</span>
+                <span class="edit-round" v-else @click="handleDelete(news)">删除</span>
+              </div>
             </div>
-          </el-col>
-        </div>
-      </el-row>
-    </el-row>
-    <div class="pager" v-if="tableData.length !== 0">
-      <div>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="current"
-          :page-size="size"
-          layout="total, prev, pager, next"
-          :total="totalCount"
-        >
-        </el-pagination>
+          </div>
+        </el-col>
       </div>
-    </div>
+    </el-row>
   </el-row>
-</template>
+  <div class="pager" v-if="tableData.length !== 0">
+    <div>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="current"
+        :page-size="size" layout="total, prev, pager, next" :total="totalCount">
+      </el-pagination>
+    </div>
+  </div>
+</el-row></template>
 
 <script>
 export default {
@@ -124,24 +78,24 @@ export default {
       isOperation: false, // 开关-标识新增或修改
       tableData: [],
       selectedRows: [],
-      bookQueryDto: {}, // 搜索条件
+      newsQueryDto: {}, // 搜索条件
       options: [],
-      bookshelfOptions: [],
+      newsShelfOptions: [],
       categoryItemSelected: null,
       categoryList: [],
-      bookOrderHistorys: []
+      newsOrderHistorys: []
     };
   },
   created() {
     this.fetchFreshData();
   },
   methods: {
-    handleReturn(book) {
-      const bookRssHistory = {
-        id: book.id
+    handleReturn(news) {
+      const newsRssHistory = {
+        id: news.id
       };
       this.$axios
-        .put("/bookOrderHistory/update", bookRssHistory)
+        .put("/newsOrderHistory/update", newsRssHistory)
         .then(res => {
           if (res.data.code === 200) {
             this.$notify({
@@ -168,7 +122,7 @@ export default {
         try {
           let ids = [orderHistory.id];
           const response = await this.$axios.post(
-            `/bookOrderHistory/batchDelete`,
+            `/newsOrderHistory/batchDelete`,
             ids
           );
           const { data } = response;
@@ -197,10 +151,10 @@ export default {
         const params = {
           current: this.currentPage,
           size: this.pageSize,
-          ...this.bookQueryDto
+          ...this.newsQueryDto
         };
         const response = await this.$axios.post(
-          "/bookOrderHistory/queryUser",
+          "/newsOrderHistory/queryUser",
           params
         );
         const { data } = response;
@@ -243,7 +197,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.item-book {
+.item-news {
   border: 1px solid rgb(235, 235, 235);
   margin: 5px;
   border-radius: 5px;

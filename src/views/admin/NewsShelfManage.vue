@@ -3,7 +3,7 @@
         <el-row style="padding: 10px;margin: 0 10px;">
             <el-row>
                 <span class="top-bar">楼层</span>
-                <el-input size="small" style="width: 188px;margin-right: 10px;" v-model="bookshelfQueryDto.floor"
+                <el-input size="small" style="width: 188px;margin-right: 10px;" v-model="newsShelfQueryDto.floor"
                     placeholder="楼层" clearable @clear="handleFilterClear">
                 </el-input>
                 <el-button size="small" class="customer"
@@ -74,7 +74,7 @@ export default {
             isOperation: false, // 开关-标识新增或修改
             tableData: [],
             selectedRows: [],
-            bookshelfQueryDto: {}, // 搜索条件
+            newsShelfQueryDto: {}, // 搜索条件
             options: []
         };
     },
@@ -100,7 +100,7 @@ export default {
             if (confirmed) {
                 try {
                     let ids = this.selectedRows.map(entity => entity.id);
-                    const response = await this.$axios.post(`/bookshelf/batchDelete`, ids);
+                    const response = await this.$axios.post(`/newsShelf/batchDelete`, ids);
                     if (response.data.code === 200) {
                         this.$swal.fire({
                             title: '删除提示',
@@ -125,14 +125,14 @@ export default {
             }
         },
         resetQueryCondition() {
-            this.bookshelfQueryDto = {};
+            this.newsShelfQueryDto = {};
             this.fetchFreshData();
         },
         // 修改信息
         async updateOperation() {
             try {
                 this.data.cover = this.cover;
-                const response = await this.$axios.put('/bookshelf/update', this.data);
+                const response = await this.$axios.put('/newsShelf/update', this.data);
                 this.$swal.fire({
                     title: '书架书架信息修改',
                     text: response.data.msg,
@@ -154,7 +154,7 @@ export default {
         async addOperation() {
             try {
                 this.data.cover = this.cover;
-                const response = await this.$axios.post('/bookshelf/save', this.data);
+                const response = await this.$axios.post('/newsShelf/save', this.data);
                 this.$message[response.data.code === 200 ? 'success' : 'error'](response.data.msg);
                 if (response.data.code === 200) {
                     this.closeDialog();
@@ -189,9 +189,9 @@ export default {
                     size: this.pageSize,
                     startTime: startTime,
                     endTime: endTime,
-                    ...this.bookshelfQueryDto
+                    ...this.newsShelfQueryDto
                 };
-                const response = await this.$axios.post('/bookshelf/query', params);
+                const response = await this.$axios.post('/newsShelf/query', params);
                 const { data } = response;
                 this.tableData = data.data;
                 this.totalItems = data.total;

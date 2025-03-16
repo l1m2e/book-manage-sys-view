@@ -1,19 +1,9 @@
 <template>
-  <div>
-    <Toolbar
-      style="border-bottom: 1px solid #eae8e8;"
-      :editor="editor"
-      :defaultConfig="toolbarConfig"
-      :mode="mode"
-    />
-    <Editor
-      :style="{ height: height, overflowY: 'hidden' }"
-      v-model="content"
-      :defaultConfig="editorConfig"
-      :mode="mode"
-      @onCreated="onCreated"
-    />
-  </div>
+<div>
+  <Toolbar style="border-bottom: 1px solid #eae8e8;" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
+  <Editor :style="{ height: height, overflowY: 'hidden' }" v-model="content" :defaultConfig="editorConfig" :mode="mode"
+    @onCreated="onCreated" />
+</div>
 </template>
 <script>
 import Vue from "vue";
@@ -40,7 +30,7 @@ export default Vue.extend({
         placeholder: "请输入题目...",
         MENU_CONF: {
           uploadImage: {
-            server: "/api/book-manage-sys-api/v1.0/file/upload",
+            server: "/api/news-manage-sys-api/v1.0/file/upload",
             fieldName: "file",
             maxFileSize: 10 * 1024 * 1024,
             maxNumberOfFiles: 10,
@@ -56,7 +46,7 @@ export default Vue.extend({
             }
           },
           uploadVideo: {
-            server: "/api/book-manage-sys-api/v1.0/file/upload",
+            server: "/api/news-manage-sys-api/v1.0/file/upload",
             fieldName: "file",
             maxFileSize: 100 * 1024 * 1024,
             headers: {

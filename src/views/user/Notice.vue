@@ -1,61 +1,46 @@
-<template>
-  <el-row style="margin-top: 20px;">
-    <!-- 条件搜索 -->
-    <div class="word-search" v-if="noticeList.length !== 0">
-      <div class="item">
-        <input type="text" placeholder="标题" v-model="noticeQueryDto.name" />
-        <i class="el-icon-search" @click="fetchNoticeList"></i>
-      </div>
+<template><el-row style="margin-top: 20px;">
+  <!-- 条件搜索 -->
+  <div class="word-search" v-if="noticeList.length !== 0">
+    <div class="item">
+      <input type="text" placeholder="标题" v-model="noticeQueryDto.name" />
+      <i class="el-icon-search" @click="fetchNoticeList"></i>
     </div>
-    <!-- 内容区 -->
-    <el-row style="margin: 10px 0;box-sizing: border-box;">
-      <el-row v-if="noticeList.length === 0">
-        <el-empty description="暂无通知" style="margin-top: 200px;"></el-empty>
-      </el-row>
-      <div
-        v-else
-        style="display: flex;justify-content: center;align-items: center;margin-block: 20px;"
-      >
-        <div>
-          <div class="save-book">
-            <div class="title">标题</div>
-            <div class="title">发布时间</div>
-            <div class="title">功能操作</div>
+  </div>
+  <!-- 内容区 -->
+  <el-row style="margin: 10px 0;box-sizing: border-box;">
+    <el-row v-if="noticeList.length === 0">
+      <el-empty description="暂无通知" style="margin-top: 200px;"></el-empty>
+    </el-row>
+    <div v-else style="display: flex;justify-content: center;align-items: center;margin-block: 20px;">
+      <div>
+        <div class="save-news">
+          <div class="title">标题</div>
+          <div class="title">发布时间</div>
+          <div class="title">功能操作</div>
+        </div>
+        <div class="save-news" v-for="(notice, index) in noticeList" :key="index">
+          <div>
+            {{ notice.name }}
           </div>
-          <div
-            class="save-book"
-            v-for="(notice, index) in noticeList"
-            :key="index"
-          >
-            <div>
-              {{ notice.name }}
-            </div>
-            <div>
-              {{ notice.createTime }}
-            </div>
-            <div>
-              <span class="text-button" @click="seeContent(notice)">阅读</span>
-            </div>
+          <div>
+            {{ notice.createTime }}
+          </div>
+          <div>
+            <span class="text-button" @click="seeContent(notice)">阅读</span>
           </div>
         </div>
       </div>
-    </el-row>
-    <!-- 分页区 -->
-    <div class="pager" v-if="noticeList.length !== 0">
-      <div>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="current"
-          :page-size="size"
-          layout="total, prev, pager, next"
-          :total="totalCount"
-        >
-        </el-pagination>
-      </div>
     </div>
   </el-row>
-</template>
+  <!-- 分页区 -->
+  <div class="pager" v-if="noticeList.length !== 0">
+    <div>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="current"
+        :page-size="size" layout="total, prev, pager, next" :total="totalCount">
+      </el-pagination>
+    </div>
+  </div>
+</el-row></template>
 
 <script>
 export default {
@@ -116,11 +101,11 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.save-book:hover {
+.save-news:hover {
   background-color: rgb(248, 248, 248);
 }
 
-.save-book {
+.save-news {
   display: flex;
   justify-content: left;
   align-items: center;
