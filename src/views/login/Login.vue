@@ -1,12 +1,10 @@
 <template>
   <div class="login-container">
     <div style="display: flex;justify-content: left;margin: 20px 0;">
-      <img src="/logo.jpg" style="width: 220px;height: 100px;" />
+      <!-- <img src="/logo.jpg" style="width: 220px;height: 100px;" /> -->
     </div>
     <div class="login-panel">
-      <div
-        style="width: 300px;padding: 40px;display: flex;justify-content: center;align-items: center;"
-      >
+      <div style="width: 300px;padding: 40px;display: flex;justify-content: center;align-items: center;">
         <img src="/bag.png" style="width: 350px;" />
       </div>
       <div class="right-login">
@@ -17,12 +15,7 @@
           <input v-model="act" class="act" placeholder="输入账号" />
         </div>
         <div class="text">
-          <input
-            v-model="pwd"
-            class="pwd"
-            type="password"
-            placeholder="输入密码"
-          />
+          <input v-model="pwd" class="pwd" type="password" placeholder="输入密码" />
         </div>
         <div>
           <span class="login-btn" @click="login">立即登录</span>
@@ -127,15 +120,12 @@ export default {
 
   .login-panel {
     display: flex;
-    border-top-left-radius: 10px;
     padding: 20px;
     justify-content: space-between;
     height: auto;
-    border-radius: 6px;
-    border-top-left-radius: 100px;
-    border-bottom-left-radius: 20px;
-    // background-color: rgb(100, 119, 224);
-    background: linear-gradient(to right, rgb(7, 109, 219), rgb(119, 139, 220));
+    border-radius: 19px;
+    // background-color: #e5ebf2;
+    background: linear-gradient(to right, #e5ebf2, rgb(119, 139, 220));
     //box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 
     .right-login {
@@ -186,9 +176,11 @@ export default {
       padding-right: 10px;
     }
   }
+
   .login-btn:hover {
     background-color: rgb(39, 106, 208);
   }
+
   .login-btn {
     display: inline-block;
     text-align: center;

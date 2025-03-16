@@ -1,58 +1,59 @@
 <template>
-<div class="menu-container">
-  <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
-    <div style="display: flex;align-items: center;">
-      <Logo name="图书后台" style="padding: 0 40px;margin: 15px 0;" :flag="flag" :bag="colorLogo" />
+  <div class="menu-container">
+    <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
+      <div style="display: flex;align-items: center;">
+        <!-- <Logo name="图书后台" style="padding: 0 40px;margin: 15px 0;" :flag="flag" :bag="colorLogo" /> -->
+      </div>
+      <div style="margin-top: 12px;">
+        <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
+      </div>
     </div>
-    <div style="margin-top: 12px;">
-      <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
+    <div class="main">
+      <div class="header-section">
+        <LevelHeader @eventListener="eventListener" @selectOperation="selectOperation" :tag="tag"
+          :userInfo="userInfo" />
+      </div>
+      <div class="content-section">
+        <router-view></router-view>
+      </div>
     </div>
+    <!-- 个人中心 -->
+    <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="26%">
+      <div slot="title" style="padding: 25px 0 0 20px;">
+        <span style="font-size: 18px;font-weight: 800;">个人中心</span>
+      </div>
+      <el-row style="padding: 10px 20px 20px 20px;">
+        <el-row>
+          <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
+            <span class="modelName">*头像</span>
+          </p>
+          <el-upload class="avatar-uploader" action="/api/news-manage-sys-api/v1.0/file/upload" :show-file-list="false"
+            :on-success="handleAvatarSuccess">
+            <img v-if="userInfo.url" :src="userInfo.url" style="width: 80px;height: 80px;" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-row>
+        <el-row>
+          <p style="font-size: 12px;padding: 3px 0;">
+            <span class="modelName">*用户名</span>
+          </p>
+          <input class="input-title" v-model="userInfo.name" placeholder="用户名" />
+        </el-row>
+        <el-row>
+          <p style="font-size: 12px;padding: 3px 0;">
+            <span class="modelName">*用户邮箱</span>
+          </p>
+          <input class="input-title" v-model="userInfo.email" placeholder="用户邮箱" />
+        </el-row>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
+          @click="dialogOperaion = false">取 消</el-button>
+        <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
+          @click="updateUserInfo">修改</el-button>
+      </span>
+    </el-dialog>
   </div>
-  <div class="main">
-    <div class="header-section">
-      <LevelHeader @eventListener="eventListener" @selectOperation="selectOperation" :tag="tag" :userInfo="userInfo" />
-    </div>
-    <div class="content-section">
-      <router-view></router-view>
-    </div>
-  </div>
-  <!-- 个人中心 -->
-  <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="26%">
-    <div slot="title" style="padding: 25px 0 0 20px;">
-      <span style="font-size: 18px;font-weight: 800;">个人中心</span>
-    </div>
-    <el-row style="padding: 10px 20px 20px 20px;">
-      <el-row>
-        <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
-          <span class="modelName">*头像</span>
-        </p>
-        <el-upload class="avatar-uploader" action="/api/news-manage-sys-api/v1.0/file/upload" :show-file-list="false"
-          :on-success="handleAvatarSuccess">
-          <img v-if="userInfo.url" :src="userInfo.url" style="width: 80px;height: 80px;" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-row>
-      <el-row>
-        <p style="font-size: 12px;padding: 3px 0;">
-          <span class="modelName">*用户名</span>
-        </p>
-        <input class="input-title" v-model="userInfo.name" placeholder="用户名" />
-      </el-row>
-      <el-row>
-        <p style="font-size: 12px;padding: 3px 0;">
-          <span class="modelName">*用户邮箱</span>
-        </p>
-        <input class="input-title" v-model="userInfo.email" placeholder="用户邮箱" />
-      </el-row>
-    </el-row>
-    <span slot="footer" class="dialog-footer">
-      <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
-        @click="dialogOperaion = false">取 消</el-button>
-      <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
-        @click="updateUserInfo">修改</el-button>
-    </span>
-  </el-dialog>
-</div>
 </template>
 <script>
 import request from "@/utils/request.js";

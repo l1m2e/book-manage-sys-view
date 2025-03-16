@@ -55,7 +55,7 @@ const routes = [
       },
       {
         path: "/newsRssHistoryManage",
-        name: "图书订阅",
+        name: "新闻订阅",
         icon: "el-icon-s-marketing",
         component: () => import(`@/views/admin/NewsRssHistoryManage.vue`),
         meta: { requireAuth: true }

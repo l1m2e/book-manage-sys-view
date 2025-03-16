@@ -3,25 +3,15 @@
     <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
       <div style="display: flex;align-items: center;justify-content: center;">
         <!-- <Logo name="图书管理" style="padding: 0 40px;margin: 15px 0;" :flag="flag" :bag="colorLogo" /> -->
-        <img src="/logo.jpg" style="width: 220px;height: 100px;" />
+        <!-- <img src="/logo.jpg" style="width: 220px;height: 100px;" /> -->
       </div>
       <div>
-        <div
-          v-if="route.show"
-          :style="{
-            fontWeight: nowRoute.name === route.name ? '800' : '',
-            backgroundColor:
-              nowRoute.name === route.name ? 'rgb(247, 247, 247)' : ''
-          }"
-          class="item-route"
-          @click="routerClick(route)"
-          v-for="(route, index) in userRoutes"
-          :key="index"
-        >
-          <i
-            :style="{ fontWeight: nowRoute.name === route.name ? '800' : '' }"
-            :class="route.icon"
-          ></i>
+        <div v-if="route.show" :style="{
+          fontWeight: nowRoute.name === route.name ? '800' : '',
+          backgroundColor:
+            nowRoute.name === route.name ? 'rgb(247, 247, 247)' : ''
+        }" class="item-route" @click="routerClick(route)" v-for="(route, index) in userRoutes" :key="index">
+          <i :style="{ fontWeight: nowRoute.name === route.name ? '800' : '' }" :class="route.icon"></i>
           {{ route.name }}
         </div>
         <div class="item-route">
